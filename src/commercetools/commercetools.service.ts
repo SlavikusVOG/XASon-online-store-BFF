@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Scope } from '@nestjs/common';
 import {
   Client,
   ClientBuilder,
@@ -11,7 +11,7 @@ import {
   Project,
 } from '@commercetools/platform-sdk';
 
-@Injectable()
+@Injectable({ scope: Scope.DEFAULT })
 export class CommercetoolsService {
   private readonly envVariables = {
     PROJECT_KEY: process.env.PROJECT_KEY,
