@@ -52,7 +52,6 @@ export class CommercetoolsService {
   private productsRequest: ByProjectKeyProductsRequestBuilder;
   private ordersRequest: ByProjectKeyOrdersRequestBuilder;
   private categoryRequest: ByProjectKeyCategoriesRequestBuilder;
-  private customerRequest: ByProjectKeyCustomersRequestBuilder;
   private productProjectionsRequest: ByProjectKeyProductProjectionsRequestBuilder;
   private customersRequest: ByProjectKeyCustomersRequestBuilder;
 
@@ -119,7 +118,7 @@ export class CommercetoolsService {
     this.productsRequest = this.httpApiRoot.products();
     this.ordersRequest = this.httpApiRoot.orders();
     this.categoryRequest = this.httpApiRoot.categories();
-    this.customerRequest = this.httpApiRoot.customers();
+    this.customersRequest = this.httpApiRoot.customers();
     this.productProjectionsRequest = this.httpApiRoot.productProjections();
     this.customersRequest = this.httpApiRoot.customers();
   }
