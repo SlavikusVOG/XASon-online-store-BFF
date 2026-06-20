@@ -5,35 +5,33 @@ import {
   createApiBuilderFromCtpClient,
 } from '@commercetools/platform-sdk';
 import { CommercetoolsConfigService } from '../config/commercetools-config.service';
-import { AnonymousAuthMiddlewareOptions } from '../types/anonymous-auth-options.type';
+import { RefreshAuthMiddlewareOptions } from '../types/refresh-token.types';
 
 @Injectable()
-export class AnonymousSessionService {
+export class RefreshTokenService {
   constructor(private readonly config: CommercetoolsConfigService) {}
 
-  createClient(anonymousId: string): Client {
-    const authOptions: AnonymousAuthMiddlewareOptions = {
+  createClient(refreshToken: string): Client {
+    const authOptions: RefreshAuthMiddlewareOptions = {
       host: this.config.authHost,
       projectKey: this.config.projectKey,
-      credentials: {
-        ...this.config.credentials,
-        anonymousId,
-      },
+      credentials: this.config.credentials,
+      refreshToken,
       scopes: this.config.scopes,
       httpClient: fetch,
     };
 
     return new ClientBuilder()
       .withProjectKey(this.config.projectKey)
-      .withAnonymousSessionFlow(authOptions)
+      .withRefreshTokenFlow(authOptions)
       .withHttpMiddleware(this.config.getHttpMiddlewareOptions())
       .withLoggerMiddleware()
       .build();
   }
 
-  createApiRoot(anonymousId: string): ByProjectKeyRequestBuilder {
+  createApiRoot(refreshToken: string): ByProjectKeyRequestBuilder {
     return createApiBuilderFromCtpClient(
-      this.createClient(anonymousId),
+      this.createClient(refreshToken),
     ).withProjectKey({ projectKey: this.config.projectKey });
   }
 }

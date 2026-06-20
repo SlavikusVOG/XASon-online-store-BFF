@@ -1,16 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AnonymousSessionService } from './anonymous-session.service';
+import { ClientCredentialsService } from './client-credentials.service';
 import { CommercetoolsConfigService } from '../config/commercetools-config.service';
 
-describe('AnonymousSessionService', () => {
-  let service: AnonymousSessionService;
+describe('ClientCredentialsService', () => {
+  let service: ClientCredentialsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AnonymousSessionService, CommercetoolsConfigService],
+      providers: [ClientCredentialsService, CommercetoolsConfigService],
     }).compile();
 
-    service = module.get<AnonymousSessionService>(AnonymousSessionService);
+    service = module.get<ClientCredentialsService>(ClientCredentialsService);
   });
 
   it('should be defined', () => {

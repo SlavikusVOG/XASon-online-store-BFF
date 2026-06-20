@@ -5,19 +5,22 @@ import {
   createApiBuilderFromCtpClient,
 } from '@commercetools/platform-sdk';
 import { CommercetoolsConfigService } from '../config/commercetools-config.service';
-import { AnonymousAuthMiddlewareOptions } from '../types/anonymous-auth-options.type';
+import { PasswordAuthMiddlewareOptions } from '../types/password-options.type';
 
 @Injectable()
-export class AnonymousSessionService {
+export class UserSessionService {
   constructor(private readonly config: CommercetoolsConfigService) {}
 
-  createClient(anonymousId: string): Client {
-    const authOptions: AnonymousAuthMiddlewareOptions = {
+  createClient(username: string, password: string): Client {
+    const authOptions: PasswordAuthMiddlewareOptions = {
       host: this.config.authHost,
       projectKey: this.config.projectKey,
       credentials: {
         ...this.config.credentials,
-        anonymousId,
+        user: {
+          username,
+          password,
+        },
       },
       scopes: this.config.scopes,
       httpClient: fetch,
@@ -25,15 +28,18 @@ export class AnonymousSessionService {
 
     return new ClientBuilder()
       .withProjectKey(this.config.projectKey)
-      .withAnonymousSessionFlow(authOptions)
+      .withPasswordFlow(authOptions)
       .withHttpMiddleware(this.config.getHttpMiddlewareOptions())
       .withLoggerMiddleware()
       .build();
   }
 
-  createApiRoot(anonymousId: string): ByProjectKeyRequestBuilder {
+  createApiRoot(
+    username: string,
+    password: string,
+  ): ByProjectKeyRequestBuilder {
     return createApiBuilderFromCtpClient(
-      this.createClient(anonymousId),
+      this.createClient(username, password),
     ).withProjectKey({ projectKey: this.config.projectKey });
   }
 }
