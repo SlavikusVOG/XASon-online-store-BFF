@@ -8,11 +8,11 @@ import {
   ByProjectKeyRequestBuilder,
   createApiBuilderFromCtpClient,
 } from '@commercetools/platform-sdk';
-import { CommercetoolsConfigService } from '../config/commercetools-config.service';
+import { ApiClientsCommercetoolsConfigService } from '../config/api-clients-commercetools-config.service';
 
 @Injectable()
 export class ClientCredentialsService {
-  constructor(private readonly config: CommercetoolsConfigService) {}
+  constructor(private readonly config: ApiClientsCommercetoolsConfigService) {}
 
   createClient(): Client {
     const authOptions: AuthMiddlewareOptions = {

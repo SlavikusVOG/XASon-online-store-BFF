@@ -17,7 +17,7 @@ export class RefreshTokenService {
       projectKey: this.config.projectKey,
       credentials: this.config.credentials,
       refreshToken,
-      scopes: this.config.scopes,
+      scopes: this.config.customerScopes,
       httpClient: fetch,
     };
 
