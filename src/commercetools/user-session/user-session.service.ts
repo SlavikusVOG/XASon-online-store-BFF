@@ -22,7 +22,7 @@ export class UserSessionService {
           password,
         },
       },
-      scopes: this.config.scopes,
+      scopes: this.config.customerScopes,
       httpClient: fetch,
     };
 

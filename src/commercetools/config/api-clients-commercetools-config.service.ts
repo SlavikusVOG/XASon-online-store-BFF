@@ -4,19 +4,19 @@ import type { AuthMiddlewareOptions } from '../types/auth-options.type';
 import { parseScopes } from '../utils/parse-scopes.util';
 
 @Injectable()
-export class CommercetoolsConfigService {
-  readonly projectKey = process.env.SPA_CTP_PROJECT_KEY ?? '';
+export class ApiClientsCommercetoolsConfigService {
+  readonly projectKey = process.env.API_CLIENTS_CTP_PROJECT_KEY ?? '';
 
   readonly credentials = {
-    clientId: process.env.SPA_CTP_CLIENT_ID ?? '',
-    clientSecret: process.env.SPA_CTP_CLIENT_SECRET ?? '',
+    clientId: process.env.API_CLIENTS_CTP_CLIENT_ID ?? '',
+    clientSecret: process.env.API_CLIENTS_CTP_CLIENT_SECRET ?? '',
   };
 
-  readonly authHost = process.env.SPA_CTP_AUTH_URL ?? '';
+  readonly authHost = process.env.API_CLIENTS_CTP_AUTH_URL ?? '';
 
-  readonly apiHost = process.env.SPA_CTP_API_URL ?? '';
+  readonly apiHost = process.env.API_CLIENTS_CTP_API_URL ?? '';
 
-  readonly customerScopes = parseScopes(process.env.SPA_CTP_SCOPES);
+  readonly scopes = parseScopes(process.env.API_CLIENTS_CTP_SCOPES);
 
   getHttpMiddlewareOptions(): HttpMiddlewareOptions {
     return {
@@ -30,7 +30,7 @@ export class CommercetoolsConfigService {
       host: this.authHost,
       projectKey: this.projectKey,
       credentials: this.credentials,
-      scopes: this.customerScopes,
+      scopes: this.scopes,
       httpClient: fetch,
     };
   }

@@ -1,10 +1,5 @@
 import { Injectable, Scope } from '@nestjs/common';
-import {
-  Client,
-  ClientBuilder,
-  type AuthMiddlewareOptions,
-  type HttpMiddlewareOptions,
-} from '@commercetools/ts-client';
+import { Client, ClientBuilder } from '@commercetools/ts-client';
 import {
   ByProjectKeyCategoriesRequestBuilder,
   ByProjectKeyCustomersRequestBuilder,
@@ -21,30 +16,12 @@ import {
   ProductProjection,
   Project,
 } from '@commercetools/platform-sdk';
+import { CommercetoolsConfigService } from './config/commercetools-config.service';
 
 @Injectable({ scope: Scope.DEFAULT })
 export class CommercetoolsService {
-  private readonly envVariables = {
-    PROJECT_KEY: process.env.PROJECT_KEY,
-    CLIENT_ID: process.env.CLIENT_ID,
-    CLIENT_SECRET: process.env.CLIENT_SECRET,
-  };
-
-  private readonly scopes: string[];
-
-  private readonly authMiddlewareOptions: AuthMiddlewareOptions;
-
-  private readonly region: string = 'europe-west1.gcp';
-
-  // Configure HTTP API httpMiddlewareOptions
-  private readonly httpAPIHTTPMiddlewareOptions: HttpMiddlewareOptions = {
-    host: `https://api.${this.region}.commercetools.com`,
-    httpClient: fetch,
-  };
-
   private project: Project;
 
-  // Export the ClientBuilder for the HTTP API
   private readonly ctpClientHttpApi: Client;
   private readonly httpApiRoot: ByProjectKeyRequestBuilder;
 
@@ -55,52 +32,17 @@ export class CommercetoolsService {
   private productProjectionsRequest: ByProjectKeyProductProjectionsRequestBuilder;
   private customersRequest: ByProjectKeyCustomersRequestBuilder;
 
-  constructor() {
-    const projectKey = this.envVariables.PROJECT_KEY ?? '';
-
-    this.scopes = [
-      `manage_orders:${projectKey}`,
-      `manage_order_edits:${projectKey}`,
-      `manage_sessions:${projectKey}`,
-      `manage_shopping_lists:${projectKey}`,
-      `manage_customers:${projectKey}`,
-      `view_types:${projectKey}`,
-      `view_product_selections:${projectKey}`,
-      `view_categories:${projectKey}`,
-      `view_shipping_methods:${projectKey}`,
-      `view_project_settings:${projectKey}`,
-      `view_cart_discounts:${projectKey}`,
-      `view_discount_codes:${projectKey}`,
-      `view_sessions:${projectKey}`,
-      `view_tax_categories:${projectKey}`,
-      `view_standalone_prices:${projectKey}`,
-      `view_products:${projectKey}`,
-      `view_published_products:${projectKey}`,
-      `view_published_products:${projectKey}`,
-      `create_anonymous_token:${projectKey}`,
-    ];
-
-    this.authMiddlewareOptions = {
-      host: `https://auth.${this.region}.commercetools.com`,
-      projectKey,
-      credentials: {
-        clientId: this.envVariables.CLIENT_ID ?? '',
-        clientSecret: this.envVariables.CLIENT_SECRET ?? '',
-      },
-      scopes: this.scopes,
-      httpClient: fetch,
-    };
-
+  constructor(private readonly config: CommercetoolsConfigService) {
     this.ctpClientHttpApi = new ClientBuilder()
-      .withProjectKey(projectKey)
-      .withClientCredentialsFlow(this.authMiddlewareOptions)
-      .withHttpMiddleware(this.httpAPIHTTPMiddlewareOptions)
-      .withLoggerMiddleware() // Include middleware for logging
+      .withProjectKey(this.config.projectKey)
+      .withClientCredentialsFlow(this.config.getAuthMiddlewareOptions())
+      .withHttpMiddleware(this.config.getHttpMiddlewareOptions())
+      .withLoggerMiddleware()
       .build();
 
     this.httpApiRoot = createApiBuilderFromCtpClient(
       this.ctpClientHttpApi,
-    ).withProjectKey({ projectKey });
+    ).withProjectKey({ projectKey: this.config.projectKey });
     this.addEndpoints();
   }
 
@@ -120,7 +62,6 @@ export class CommercetoolsService {
     this.categoryRequest = this.httpApiRoot.categories();
     this.customersRequest = this.httpApiRoot.customers();
     this.productProjectionsRequest = this.httpApiRoot.productProjections();
-    this.customersRequest = this.httpApiRoot.customers();
   }
 
   getApiRoot() {
@@ -133,20 +74,12 @@ export class CommercetoolsService {
     return orders;
   }
 
-  // async postOrder(order: Order) {}
-
-  // async putOrder(order: Order) {}
-
-  // async deleteOrder(order: Order) {}
-
-  // TODO: use Product search API (https://docs.commercetools.com/api/projects/product-search)
   async getProducts(): Promise<Product[]> {
     const response = await this.productsRequest.get().execute();
     const products = response.body.results;
     return products;
   }
 
-  // TODO: use Product Projections API (https://docs.commercetools.com/api/projects/productProjections)
   async getProductProjections(id: string): Promise<ProductProjection> {
     const response = await this.productProjectionsRequest
       .withId({ ID: id })

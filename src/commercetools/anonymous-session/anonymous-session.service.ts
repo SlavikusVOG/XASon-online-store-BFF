@@ -19,7 +19,7 @@ export class AnonymousSessionService {
         ...this.config.credentials,
         anonymousId,
       },
-      scopes: this.config.scopes,
+      scopes: this.config.customerScopes,
       httpClient: fetch,
     };
 
