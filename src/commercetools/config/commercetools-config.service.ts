@@ -40,11 +40,16 @@ export class CommercetoolsConfigService {
   ];
 
   readonly customerScopes = [
-    `view_published_products:${this.projectKey}`,
-    `manage_my_orders:${this.projectKey}`,
-    `manage_my_profile:${this.projectKey}`,
-    `manage_my_shopping_lists:${this.projectKey}`,
+    `manage_my_quote_requests:${this.projectKey}`,
+    `manage_my_payments:${this.projectKey}`,
+    `manage_my_quotes:${this.projectKey}`,
     `create_anonymous_token:${this.projectKey}`,
+    `manage_my_profile:${this.projectKey}`,
+    `manage_my_orders:${this.projectKey}`,
+    `view_categories:${this.projectKey}`,
+    `manage_my_shopping_lists:${this.projectKey}`,
+    `manage_my_business_units:${this.projectKey}`,
+    `view_published_products:${this.projectKey}`,
   ];
 
   getHttpMiddlewareOptions(): HttpMiddlewareOptions {
