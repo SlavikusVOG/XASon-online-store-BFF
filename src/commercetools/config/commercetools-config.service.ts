@@ -36,6 +36,7 @@ export class CommercetoolsConfigService {
     `view_products:${this.projectKey}`,
     `view_published_products:${this.projectKey}`,
     `create_anonymous_token:${this.projectKey}`,
+    `manage_api_clients:${this.projectKey}`,
   ];
 
   readonly customerScopes = [
