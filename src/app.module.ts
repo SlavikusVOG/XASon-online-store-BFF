@@ -8,9 +8,10 @@ import { AnonymousSessionService } from './commercetools/anonymous-session/anony
 import { UserSessionService } from './commercetools/user-session/user-session.service';
 import { RefreshTokenService } from './commercetools/refresh-token/refresh-token.service';
 import { AuthModule } from './auth/auth.module';
+import { CustomerModule } from './customer/customer.module';
 
 @Module({
-  imports: [AuthModule],
+  imports: [AuthModule, CustomerModule],
   controllers: [AppController],
   providers: [
     AppService,
