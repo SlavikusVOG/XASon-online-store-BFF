@@ -7,9 +7,10 @@ import { ClientCredentialsService } from './commercetools/client-credentials/cli
 import { AnonymousSessionService } from './commercetools/anonymous-session/anonymous-session.service';
 import { UserSessionService } from './commercetools/user-session/user-session.service';
 import { RefreshTokenService } from './commercetools/refresh-token/refresh-token.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [],
+  imports: [AuthModule],
   controllers: [AppController],
   providers: [
     AppService,

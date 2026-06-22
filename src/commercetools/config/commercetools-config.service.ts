@@ -38,6 +38,14 @@ export class CommercetoolsConfigService {
     `create_anonymous_token:${this.projectKey}`,
   ];
 
+  readonly customerScopes = [
+    `view_published_products:${this.projectKey}`,
+    `manage_my_orders:${this.projectKey}`,
+    `manage_my_profile:${this.projectKey}`,
+    `manage_my_shopping_lists:${this.projectKey}`,
+    `create_anonymous_token:${this.projectKey}`,
+  ];
+
   getHttpMiddlewareOptions(): HttpMiddlewareOptions {
     return {
       host: this.apiHost,
