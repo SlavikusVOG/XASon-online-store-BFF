@@ -12,6 +12,7 @@ describe('AuthController', () => {
   const authService = {
     createAnonymousSession: jest.fn(),
     login: jest.fn(),
+    signup: jest.fn(),
     refresh: jest.fn(),
     revoke: jest.fn(),
     introspect: jest.fn(),
@@ -89,6 +90,43 @@ describe('AuthController', () => {
         'my-store',
       );
       expect(response.body).toEqual(tokenResponse);
+    });
+  });
+
+  describe('POST /auth/signup', () => {
+    it('signs up a customer', async () => {
+      const signupResponse = {
+        ...tokenResponse,
+        customer: {
+          id: 'customer-id',
+          email: 'user@example.com',
+          firstName: 'John',
+          lastName: 'Doe',
+        },
+      };
+      authService.signup.mockResolvedValue(signupResponse);
+
+      const response = await request(app.getHttpServer())
+        .post('/auth/signup')
+        .send({
+          email: 'user@example.com',
+          password: 'secret',
+          firstName: 'John',
+          lastName: 'Doe',
+          storeKey: 'my-store',
+          anonymousId: 'anon-123',
+        })
+        .expect(201);
+
+      expect(authService.signup).toHaveBeenCalledWith({
+        email: 'user@example.com',
+        password: 'secret',
+        firstName: 'John',
+        lastName: 'Doe',
+        storeKey: 'my-store',
+        anonymousId: 'anon-123',
+      });
+      expect(response.body).toEqual(signupResponse);
     });
   });
 

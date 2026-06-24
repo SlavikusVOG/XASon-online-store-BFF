@@ -6,11 +6,13 @@ import type {
 import { ShoppingListsService } from './shopping-lists.service';
 import { AccessToken } from '../decorators/access-token.decorator';
 import { QueryParamsDto } from '../dto/query-params.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('me/shopping-lists')
 export class ShoppingListsController {
   constructor(private readonly shoppingListsService: ShoppingListsService) {}
 
+  @ApiBearerAuth()
   @Get()
   getShoppingLists(
     @AccessToken() authorization: string,
@@ -19,6 +21,7 @@ export class ShoppingListsController {
     return this.shoppingListsService.getShoppingLists(authorization, query);
   }
 
+  @ApiBearerAuth()
   @Get(':id')
   getShoppingListById(
     @AccessToken() authorization: string,
@@ -32,6 +35,7 @@ export class ShoppingListsController {
     );
   }
 
+  @ApiBearerAuth()
   @Post()
   createShoppingList(
     @AccessToken() authorization: string,
@@ -40,6 +44,7 @@ export class ShoppingListsController {
     return this.shoppingListsService.createShoppingList(authorization, body);
   }
 
+  @ApiBearerAuth()
   @Post(':id')
   updateShoppingList(
     @AccessToken() authorization: string,

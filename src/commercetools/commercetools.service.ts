@@ -25,7 +25,7 @@ import {
   Project,
 } from '@commercetools/platform-sdk';
 import { CommercetoolsConfigService } from './config/commercetools-config.service';
-import { TestConfigService } from './config/test-online-store-commercetools-config.service';
+import { B2CConfigService } from './config/b2c-commercetools-config.service';
 
 type CommercetoolsError = {
   statusCode?: number;
@@ -52,7 +52,7 @@ export class CommercetoolsService {
 
   constructor(
     private readonly config: CommercetoolsConfigService,
-    private readonly testConfig: TestConfigService,
+    private readonly testConfig: B2CConfigService,
   ) {
     this.ctpClientHttpApi = new ClientBuilder()
       .withProjectKey(this.config.projectKey)
