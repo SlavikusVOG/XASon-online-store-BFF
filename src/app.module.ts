@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CommercetoolsService } from './commercetools/commercetools.service';
 import { CommercetoolsConfigService } from './commercetools/config/commercetools-config.service';
-import { TestConfigService } from './commercetools/config/test-online-store-commercetools-config.service';
+import { B2CConfigService } from './commercetools/config/b2c-commercetools-config.service';
 import { ApiClientsCommercetoolsConfigService } from './commercetools/config/api-clients-commercetools-config.service';
 import { ClientCredentialsService } from './commercetools/client-credentials/client-credentials.service';
 import { AnonymousSessionService } from './commercetools/anonymous-session/anonymous-session.service';
@@ -19,7 +19,7 @@ import { CustomerModule } from './customer/customer.module';
   providers: [
     AppService,
     CommercetoolsConfigService,
-    TestConfigService,
+    B2CConfigService,
     ApiClientsCommercetoolsConfigService,
     CommercetoolsService,
     ClientCredentialsService,

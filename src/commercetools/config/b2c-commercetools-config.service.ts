@@ -1,10 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import type { HttpMiddlewareOptions } from '@commercetools/ts-client';
+import {
+  ClientBuilder,
+  type Client,
+  type HttpMiddlewareOptions,
+} from '@commercetools/ts-client';
 import type { AuthMiddlewareOptions } from '../types/auth-options.type';
 import { parseScopes } from '../utils/parse-scopes.util';
+import {
+  ByProjectKeyRequestBuilder,
+  createApiBuilderFromCtpClient,
+} from '@commercetools/platform-sdk';
 
 @Injectable()
-export class TestConfigService {
+export class B2CConfigService {
+  createApiRoot(): ByProjectKeyRequestBuilder {
+    return createApiBuilderFromCtpClient(this.createClient()).withProjectKey({
+      projectKey: this.projectKey,
+    });
+  }
+
+  createClient(): Client {
+    return new ClientBuilder()
+      .withProjectKey(this.projectKey)
+      .withClientCredentialsFlow(this.getAuthMiddlewareOptions())
+      .withHttpMiddleware(this.getHttpMiddlewareOptions())
+      .build();
+  }
+
   readonly projectKey = process.env.CTP_PROJECT_KEY ?? '';
 
   readonly credentials = {
