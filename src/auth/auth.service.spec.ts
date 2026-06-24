@@ -6,6 +6,7 @@ import {
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { CommercetoolsConfigService } from '../commercetools/config/commercetools-config.service';
+import { B2CConfigService } from '../commercetools/config/b2c-commercetools-config.service';
 
 type FetchCall = [input: RequestInfo | URL, init?: RequestInit];
 
@@ -21,6 +22,10 @@ describe('AuthService', () => {
       clientId: 'client-id',
       clientSecret: 'client-secret',
     },
+  };
+
+  const b2cConfigService = {
+    createApiRoot: jest.fn(),
   };
 
   const tokenResponse = {
@@ -50,6 +55,10 @@ describe('AuthService', () => {
       providers: [
         AuthService,
         { provide: CommercetoolsConfigService, useValue: config },
+        {
+          provide: B2CConfigService,
+          useValue: b2cConfigService,
+        },
       ],
     }).compile();
 
@@ -97,6 +106,55 @@ describe('AuthService', () => {
       'https://auth.example.com/oauth/test-project/in-store/key=my-store/customers/token',
     );
     expect(init?.body).toContain('grant_type=password');
+  });
+
+  it('signs up a customer and logs them in', async () => {
+    const customer = {
+      id: 'customer-id',
+      email: 'user@example.com',
+      firstName: 'John',
+      lastName: 'Doe',
+    };
+    const post = jest.fn().mockReturnValue({
+      execute: jest.fn().mockResolvedValue({ body: { customer } }),
+    });
+    const customers = jest.fn().mockReturnValue({ post });
+    const inStoreKeyWithStoreKeyValue = jest
+      .fn()
+      .mockReturnValue({ customers });
+    b2cConfigService.createApiRoot.mockReturnValue({
+      customers,
+      inStoreKeyWithStoreKeyValue,
+    });
+    fetchMock.mockResolvedValue(
+      mockJsonResponse(200, tokenResponse) as unknown as Response,
+    );
+
+    const result = await service.signup({
+      email: 'user@example.com',
+      password: 'secret',
+      firstName: 'John',
+      lastName: 'Doe',
+      storeKey: 'my-store',
+      anonymousId: 'anon-123',
+    });
+
+    expect(inStoreKeyWithStoreKeyValue).toHaveBeenCalledWith({
+      storeKey: 'my-store',
+    });
+    expect(post).toHaveBeenCalledWith({
+      body: {
+        email: 'user@example.com',
+        password: 'secret',
+        firstName: 'John',
+        lastName: 'Doe',
+        anonymousId: 'anon-123',
+      },
+    });
+    expect(result).toEqual({
+      ...tokenResponse,
+      customer,
+    });
   });
 
   it('refreshes a token', async () => {
