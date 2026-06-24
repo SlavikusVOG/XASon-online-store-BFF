@@ -2,11 +2,13 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { AccessToken } from '../decorators/access-token.decorator';
 import { QueryParamsDto } from '../dto/query-params.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
+  @ApiBearerAuth()
   @Get()
   getProducts(
     @AccessToken() authorization: string,
@@ -15,6 +17,7 @@ export class ProductsController {
     return this.productsService.getProducts(authorization, query);
   }
 
+  @ApiBearerAuth()
   @Get(':id')
   getProductById(
     @AccessToken() authorization: string,
