@@ -46,7 +46,9 @@ export class CustomerApiService {
   private createClient(authorization: string): Client {
     return new ClientBuilder()
       .withProjectKey(this.config.projectKey)
-      .withExistingTokenFlow(authorization)
+      .withExistingTokenFlow(authorization, {
+        force: false,
+      })
       .withHttpMiddleware(this.config.getHttpMiddlewareOptions())
       .withLoggerMiddleware()
       .build();

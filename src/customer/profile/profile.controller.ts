@@ -2,16 +2,19 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import type { MyCustomerUpdate } from '@commercetools/platform-sdk';
 import { ProfileService } from './profile.service';
 import { AccessToken } from '../decorators/access-token.decorator';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('me')
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
+  @ApiBearerAuth()
   @Get()
   getProfile(@AccessToken() authorization: string) {
     return this.profileService.getProfile(authorization);
   }
 
+  @ApiBearerAuth()
   @Post()
   updateProfile(
     @AccessToken() authorization: string,
