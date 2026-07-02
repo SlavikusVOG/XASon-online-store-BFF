@@ -28,6 +28,9 @@ async function bootstrap() {
     ],
   });
 
+  // TODO: disable for prod
+  app.enableCors(); // Enables CORS for all origins and methods
+
   await app.listen(process.env.PORT ?? 3000);
 }
 void bootstrap();
