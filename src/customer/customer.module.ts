@@ -9,6 +9,9 @@ import { OrdersController } from './orders/orders.controller';
 import { OrdersService } from './orders/orders.service';
 import { ShoppingListsController } from './shopping-lists/shopping-lists.controller';
 import { ShoppingListsService } from './shopping-lists/shopping-lists.service';
+import { ActiveCartController } from './carts/active-cart.controller';
+import { CartsController } from './carts/carts.controller';
+import { CartsService } from './carts/carts.service';
 
 @Module({
   controllers: [
@@ -16,6 +19,8 @@ import { ShoppingListsService } from './shopping-lists/shopping-lists.service';
     ProfileController,
     OrdersController,
     ShoppingListsController,
+    CartsController,
+    ActiveCartController,
   ],
   providers: [
     CommercetoolsConfigService,
@@ -24,6 +29,7 @@ import { ShoppingListsService } from './shopping-lists/shopping-lists.service';
     ProfileService,
     OrdersService,
     ShoppingListsService,
+    CartsService,
   ],
 })
 export class CustomerModule {}
